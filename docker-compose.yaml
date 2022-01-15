@@ -1,0 +1,42 @@
+version: "3"
+services:
+  mysql:
+    platform: linux/arm64/v8
+    network_mode: host
+    image: mysql/mysql-server:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: toor
+      MYSQL_USER: root
+      MYSQL_PASSWORD: toor
+      MYSQL_DATABASE: app_db
+    volumes:
+      - mysql-data-volume:/var/lib/mysql
+      - "./config/my.cnf:/etc/my.cnf"
+    expose:
+      - 3306
+    ports:
+    - 3306:3306
+
+  vertx:
+    platform: linux/arm64/v8
+    network_mode: host
+    depends_on:
+      - mysql
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: local/hello-universe-vertx-app
+    environment:
+      DATABASE_HOST: localhost
+      DATABASE_USER: root
+      DATABASE_PASSWORD: toor
+      DATABASE_NAME: app_db
+    volumes:
+      - ./src/main/java/HelloUniverse:/app/src/main/java/HelloUniverse
+    expose:
+      - 8888
+    ports:
+    - 8888:8888
+
+volumes:
+  mysql-data-volume:
