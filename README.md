@@ -8,6 +8,7 @@ This application was generated using http://start.vertx.io
 ```sh
 docker compose build
 docker compose up
+# open http://localhost:8888/ in a browser of your choice
 ```
 
 ### Building Vertx app alone
